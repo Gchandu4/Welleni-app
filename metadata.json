@@ -1,0 +1,6 @@
+{
+  "name": "Welleni",
+  "description": "A premium healthcare and wellness platform to search hospitals, book appointments, complete secure checkout, manage medical records, and connect with support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
