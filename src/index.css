@@ -10,6 +10,8 @@
     background-color: #f9f9f8;
     color: #191c1c;
     min-height: max(100vh, 884px);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 }
 

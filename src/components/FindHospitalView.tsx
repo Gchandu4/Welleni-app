@@ -193,7 +193,7 @@ export const FindHospitalView: React.FC<FindHospitalViewProps> = ({
                   </div>
 
                   {/* Address Box */}
-                  <div className="p-3.5 bg-surface-container-lowest/90 rounded-2xl border border-surface-variant text-xs text-on-surface flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                  <div className="p-3.5 sm:p-4 bg-surface-container-lowest/90 rounded-2xl border border-surface-variant text-xs text-on-surface space-y-2.5 shadow-2xs">
                     <div className="space-y-1">
                       <p className="font-semibold text-on-surface flex items-start gap-1.5">
                         <span className="material-symbols-outlined text-sm text-primary shrink-0 mt-0.5">place</span>
@@ -205,38 +205,205 @@ export const FindHospitalView: React.FC<FindHospitalViewProps> = ({
                         </p>
                       )}
                     </div>
-                    <button
-                      onClick={() => handleCopyAddress(hospital.address)}
-                      className="px-3 py-1.5 bg-sand-soft hover:bg-teal-mist/30 text-primary rounded-xl font-semibold text-xs transition-colors shrink-0 flex items-center justify-center gap-1 active:scale-95"
-                    >
-                      <span className="material-symbols-outlined text-sm">
-                        {copiedAddress ? 'check' : 'content_copy'}
-                      </span>
-                      <span>{copiedAddress ? t.copiedAddressBtn : t.copyAddressBtn}</span>
-                    </button>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-surface-variant/50">
+                      <button
+                        onClick={() => handleCopyAddress(hospital.address)}
+                        className="px-3 py-2 bg-sand-soft hover:bg-teal-mist/30 text-primary rounded-xl font-semibold text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95 min-h-[40px]"
+                      >
+                        <span className="material-symbols-outlined text-sm">
+                          {copiedAddress ? 'check' : 'content_copy'}
+                        </span>
+                        <span>{copiedAddress ? t.copiedAddressBtn : t.copyAddressBtn}</span>
+                      </button>
+
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=Sri+Sankalpa+Hospitals+Huzurnagar+Road+Kodad+Telangana+508206"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl font-semibold text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95 min-h-[40px]"
+                      >
+                        <span className="material-symbols-outlined text-sm">directions</span>
+                        <span>{isTelugu ? 'గూగుల్ మ్యాప్స్' : 'Google Maps'}</span>
+                      </a>
+                    </div>
                   </div>
 
                   {/* Direct Contact Phone Numbers */}
                   {hospital.phoneNumbers && (
-                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                      <span className="text-xs font-bold text-on-surface flex items-center gap-1">
+                    <div className="space-y-2 pt-1">
+                      <span className="text-xs font-bold text-on-surface flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-sm text-primary">phone_in_talk</span>
                         {t.helplineTitle}:
                       </span>
-                      {hospital.phoneNumbers.map((phone) => (
-                        <a
-                          key={phone}
-                          href={`tel:${phone}`}
-                          className="px-3 py-1 bg-surface-container hover:bg-teal-mist/40 text-primary border border-surface-variant hover:border-primary rounded-lg text-xs font-semibold flex items-center gap-1 transition-all"
-                        >
-                          <span className="material-symbols-outlined text-xs">call</span>
-                          <span>{phone}</span>
-                        </a>
-                      ))}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        {hospital.phoneNumbers.map((phone) => (
+                          <a
+                            key={phone}
+                            href={`tel:${phone}`}
+                            className="px-3 py-2.5 bg-surface-container hover:bg-primary hover:text-white text-primary border border-surface-variant hover:border-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all min-h-[44px] active:scale-95"
+                          >
+                            <span className="material-symbols-outlined text-sm">call</span>
+                            <span>{phone}</span>
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
+            </div>
+
+            {/* Hospital Features & Key Clinical Facilities */}
+            <div className="p-4 sm:p-6 md:p-8 bg-surface-container-low/60 border-b border-surface-variant space-y-6">
+              <div>
+                <h3 className="font-bold text-xl text-on-surface font-sans flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary">featured_play_list</span>
+                  {isTelugu ? 'హాస్పిటల్ ముఖ్య సౌకర్యాలు & ప్రత్యేకతలు' : 'Hospital Key Features & Clinical Facilities'}
+                </h3>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  {isTelugu
+                    ? '24/7 అత్యవసర సంరక్షణ, ఆధునిక ఆపరేషన్ థియేటర్, ప్రసూతి సేవలు మరియు నాణ్యమైన వైద్య సదుపాయాలు'
+                    : '24/7 emergency casualty, advanced surgical OT, modern maternity suites, and round-the-clock patient amenities.'}
+                </p>
+              </div>
+
+              {/* Feature Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="p-4 bg-surface-container-lowest rounded-2xl border border-surface-variant/80 hover:border-primary transition-all space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-xl">emergency</span>
+                    </div>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-950/80 dark:text-red-300">
+                      24/7
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-sm text-on-surface">
+                    {isTelugu ? '24/7 అత్యవసర & విష చికిత్స' : '24/7 Emergency & Poisoning Unit'}
+                  </h4>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {isTelugu
+                      ? 'పాము కాటు, తేలు కాటుకు యాంటీ-వీనమ్, పురుగుల మందు/విష ప్రయోగ అత్యవసర చికిత్స & స్థిరీకరణ.'
+                      : 'Anti-venom care for snake & scorpion bites, acute poisoning management, seizure & trauma stabilization.'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-surface-container-lowest rounded-2xl border border-surface-variant/80 hover:border-primary transition-all space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-teal-mist/40 text-primary flex items-center justify-center">
+                      <span className="material-symbols-outlined text-xl">healing</span>
+                    </div>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-mist/30 text-teal-deep">
+                      {isTelugu ? 'ఆధునిక OT' : 'Advanced OT'}
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-sm text-on-surface">
+                    {isTelugu ? 'అధునాతన లాపరోస్కోపిక్ సర్జరీ' : 'Laparoscopic & General Surgery'}
+                  </h4>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {isTelugu
+                      ? 'పిత్తాశయ రాళ్ళు, హెర్నియా, అపెండిక్స్, పైల్స్, ఫిషర్, ఫిస్టులా శస్త్రచికిత్సలకు అత్యాధునిక సౌకర్యాలు.'
+                      : 'Minimally invasive keyhole procedures for gallbladder stones, hernia, appendix, piles, fissure & fistulas.'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-surface-container-lowest rounded-2xl border border-surface-variant/80 hover:border-primary transition-all space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+                      <span className="material-symbols-outlined text-xl">female</span>
+                    </div>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container">
+                      {isTelugu ? 'ప్రసూతి వార్డ్' : 'Maternity'}
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-sm text-on-surface">
+                    {isTelugu ? 'ప్రసూతి & స్త్రీల సంపూర్ణ సంరక్షణ' : 'Obstetrics & Maternity Wing'}
+                  </h4>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {isTelugu
+                      ? 'సుఖ ప్రసవాలు, అధిక-ప్రమాద డెలివరీలు, PCOD/PCOS చికిత్స, సంతానలేమి పరీక్షలు మరియు గైనిక్ సర్జరీలు.'
+                      : 'Normal & high-risk deliveries, comprehensive PCOD/PCOS care, infertility evaluation, and painless labor.'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-surface-container-lowest rounded-2xl border border-surface-variant/80 hover:border-primary transition-all space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center">
+                      <span className="material-symbols-outlined text-xl">vital_signs</span>
+                    </div>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container">
+                      ICU
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-sm text-on-surface">
+                    {isTelugu ? 'జనరల్ మెడిసిన్ & క్రిటికల్ కేర్' : 'General Medicine & Critical Care'}
+                  </h4>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {isTelugu
+                      ? 'షుగర్, బిపి, డెంగ్యూ, మలేరియా, మూత్రపిండాల రాళ్ళు, ఫిట్స్ మరియు వృద్ధుల ఆరోగ్య సమస్యల నిర్వహణ.'
+                      : 'Expert treatment for diabetes, hypertension, dengue, malaria, kidney stones, UTI, and elderly geriatric care.'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-surface-container-lowest rounded-2xl border border-surface-variant/80 hover:border-primary transition-all space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-sand-soft text-primary flex items-center justify-center">
+                      <span className="material-symbols-outlined text-xl">medication</span>
+                    </div>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sand-soft text-primary">
+                      24/7
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-sm text-on-surface">
+                    {isTelugu ? '24/7 ఫార్మసీ & డయాగ్నోస్టిక్స్' : '24/7 Pharmacy & Lab Diagnostics'}
+                  </h4>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {isTelugu
+                      ? 'అత్యవసర మందులు, లాబ్ రక్త పరీక్షలు మరియు తక్షణ ఫలితాల నివేదికలు 24 గంటలు అందుబాటులో ఉంటాయి.'
+                      : 'Round-the-clock emergency medicines, routine & emergency blood tests, and fast clinical reporting.'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-surface-container-lowest rounded-2xl border border-surface-variant/80 hover:border-primary transition-all space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-teal-mist/30 text-teal-deep flex items-center justify-center">
+                      <span className="material-symbols-outlined text-xl">clinical_notes</span>
+                    </div>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-mist/30 text-teal-deep">
+                      OPD & IP
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-sm text-on-surface">
+                    {isTelugu ? 'అడ్వాన్స్‌డ్ ఇన్-పేషెంట్ & రూమ్స్' : 'In-Patient Rooms & AC Wards'}
+                  </h4>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {isTelugu
+                      ? 'పరిశుభ్రమైన జనరల్ మరియు ప్రత్యేక ఏ/సి గదులు, 24 గంటల నర్సింగ్ కేర్ మరియు పేషెంట్ సపోర్ట్.'
+                      : 'Hygienic general and private AC recovery wards with 24/7 qualified nursing and patient support.'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Specialties Badges Strip */}
+              {hospital.specialties && hospital.specialties.length > 0 && (
+                <div className="pt-2">
+                  <p className="text-xs font-bold text-on-surface uppercase tracking-wider mb-2">
+                    {isTelugu ? 'ప్రధాన వైద్య విభాగాలు & స్పెషాలిటీలు:' : 'Key Medical Specialties & Treatments:'}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {hospital.specialties.map((spec) => (
+                      <span
+                        key={spec}
+                        className="px-3 py-1 bg-surface-container-lowest text-on-surface border border-surface-variant/80 rounded-full text-xs font-semibold flex items-center gap-1 shadow-2xs"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                        <span>{spec}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Doctors Showcase Section */}

@@ -31,12 +31,13 @@ import { LoginView } from './components/LoginView';
 import { SignUpView } from './components/SignUpView';
 import { SupportView } from './components/SupportView';
 import { BookingsView } from './components/BookingsView';
+import { PlayStoreStudioView } from './components/PlayStoreStudioView';
 import { FilterModal } from './components/FilterModal';
 import { AIAssistantModal } from './components/AIAssistantModal';
 import { ToastContainer, AppToast } from './components/ToastContainer';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<ViewMode>('hospitals');
+  const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [user, setUser] = useState<UserProfile>(INITIAL_USER);
   const [savedPatients, setSavedPatients] = useState<Patient[]>(INITIAL_PATIENTS);
@@ -377,7 +378,7 @@ export default function App() {
       />
 
       {/* Main Canvas Container */}
-      <main className="flex-1 max-w-[1200px] w-full mx-auto px-4 md:px-10 py-6">
+      <main className="flex-1 max-w-[1200px] w-full mx-auto px-3 sm:px-4 md:px-10 pt-3 md:pt-6 pb-24 md:pb-8">
         {currentView === 'home' && (
           <HomeView
             hospitals={hospitals}
@@ -459,6 +460,10 @@ export default function App() {
             onNavigateToHospitals={() => setCurrentView('hospitals')}
             onShowToast={handleShowToast}
           />
+        )}
+
+        {currentView === 'playstore' && (
+          <PlayStoreStudioView onBack={() => setCurrentView('home')} />
         )}
       </main>
 

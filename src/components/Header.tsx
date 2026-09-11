@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ViewMode, UserProfile } from '../types';
 import { UpcomingAppointmentAlert } from '../utils/appointmentAlerts';
 import { useLanguage } from '../i18n/LanguageContext';
-import { LanguageToggle } from './LanguageToggle';
 import { WelleniLogo } from './WelleniLogo';
 
 interface HeaderProps {
@@ -28,10 +27,8 @@ export const Header: React.FC<HeaderProps> = ({
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
-  const [isAlertBannerDismissed, setIsAlertBannerDismissed] = useState(false);
 
   const hasUpcoming24h = upcomingAlerts.length > 0;
-  const primaryUpcoming = hasUpcoming24h ? upcomingAlerts[0] : null;
 
   const generalNotifications = [
     {
@@ -55,69 +52,26 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="bg-surface/90 dark:bg-surface-dim w-full top-0 sticky z-50 border-b border-outline-variant/20 backdrop-blur-md transition-all shadow-2xs">
-      {/* 24-Hour Urgent Appointment Banner Strip */}
-      {hasUpcoming24h && !isAlertBannerDismissed && primaryUpcoming && (
-        <div className="bg-gradient-to-r from-amber-500/15 via-teal-500/15 to-amber-500/10 border-b border-amber-400/30 px-4 md:px-10 py-2 text-xs transition-all">
-          <div className="max-w-[1200px] mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-on-surface">
-              <span className="relative flex h-2.5 w-2.5 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-600"></span>
-              </span>
-              <span className="bg-amber-500/20 text-amber-900 dark:text-amber-200 font-bold px-2 py-0.5 rounded text-[10px] uppercase tracking-wide border border-amber-400/40">
-                {t.alert24h}
-              </span>
-              <span className="font-semibold text-on-surface line-clamp-1">
-                {t.upcomingAppointment}: <strong>{primaryUpcoming.booking.doctorName}</strong> ({primaryUpcoming.booking.hospitalName})
-              </span>
-              <span className="hidden sm:inline-block text-amber-800 dark:text-amber-300 font-bold bg-amber-100 dark:bg-amber-900/60 px-2 py-0.5 rounded-full text-[11px]">
-                {primaryUpcoming.isToday ? t.today : t.tomorrow} • {primaryUpcoming.booking.timeSlot} ({primaryUpcoming.timeRemainingFormatted})
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3 shrink-0 ml-auto">
-              <button
-                onClick={() => {
-                  onNavigate('bookings');
-                }}
-                className="bg-primary hover:bg-teal-deep text-on-primary font-bold px-3 py-1 rounded-lg text-[11px] transition-all flex items-center gap-1 shadow-2xs active:scale-95"
-              >
-                <span>{t.viewDetails}</span>
-                <span className="material-symbols-outlined text-xs">arrow_forward</span>
-              </button>
-              <button
-                onClick={() => setIsAlertBannerDismissed(true)}
-                className="text-on-surface-variant hover:text-on-surface p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                title="Dismiss banner"
-                aria-label="Dismiss banner"
-              >
-                <span className="material-symbols-outlined text-sm">close</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="max-w-[1200px] mx-auto flex justify-between items-center px-4 md:px-10 py-2.5 md:py-3">
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2.5 md:gap-4">
           {/* Mobile Back / Menu Button */}
           {showBackButton ? (
             <button
-              onClick={() => onNavigate('hospitals')}
+              onClick={() => onNavigate(currentView === 'checkout' ? 'hospitals' : 'home')}
               aria-label="Go back"
-              className="p-2 rounded-full hover:bg-surface-variant/60 transition-colors text-on-surface-variant active:scale-95"
+              className="p-2 -ml-1 rounded-full hover:bg-surface-variant/60 transition-colors text-on-surface-variant active:scale-95 flex items-center justify-center"
             >
               <span className="material-symbols-outlined text-2xl">arrow_back</span>
             </button>
           ) : (
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="md:hidden p-2 rounded-full hover:bg-surface-variant/60 transition-colors text-on-surface-variant relative"
+              className="md:hidden p-2 rounded-full hover:bg-surface-variant/60 transition-colors text-on-surface-variant relative active:scale-95"
               aria-label="Open menu"
             >
               <span className="material-symbols-outlined text-2xl">menu</span>
               {hasUpcoming24h && (
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-amber-500 rounded-full ring-2 ring-surface animate-pulse"></span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full ring-2 ring-surface"></span>
               )}
             </button>
           )}
@@ -125,10 +79,14 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Brand Logo: Welleni */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center group text-left transition-transform active:scale-95"
+            className="flex items-center gap-2 group text-left transition-transform active:scale-95"
             aria-label="Welleni Healthcare Home"
           >
             <WelleniLogo size="md" />
+            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-primary bg-surface-container-low px-2.5 py-0.5 rounded-full border border-surface-variant">
+              <span className="material-symbols-outlined text-xs">location_on</span>
+              <span>{isTelugu ? 'కోదాడ' : 'Kodad, TS'}</span>
+            </span>
           </button>
         </div>
 
@@ -163,12 +121,6 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <span>{t.navBookings}</span>
-            {hasUpcoming24h && (
-              <span className="inline-flex items-center gap-1 bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-700/60 animate-pulse shadow-2xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                {upcomingAlerts.length}
-              </span>
-            )}
           </button>
           <button
             onClick={() => onNavigate('profile')}
@@ -190,12 +142,32 @@ export const Header: React.FC<HeaderProps> = ({
           >
             {t.navSupport}
           </button>
+
+          <button
+            onClick={() => onNavigate('playstore')}
+            className={`font-semibold text-xs transition-all px-3 py-1.5 rounded-full flex items-center gap-1.5 border shadow-2xs ${
+              currentView === 'playstore'
+                ? 'bg-primary text-on-primary border-primary'
+                : 'bg-teal-mist/30 hover:bg-teal-mist/60 text-primary border-primary/20'
+            }`}
+            title="Google Play Store Listing Assets & Images"
+          >
+            <span className="material-symbols-outlined text-sm">shop</span>
+            <span>Play Store Assets</span>
+          </button>
         </nav>
 
-        {/* Right Actions: Language Switcher, Notifications & Profile */}
-        <div className="flex items-center gap-2 md:gap-3.5 relative">
-          {/* Prominent Language Switcher */}
-          <LanguageToggle variant="header" />
+        {/* Right Actions: Helpline, Notifications & Profile */}
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3.5 relative">
+          {/* Direct 24/7 Emergency Call Quick Action */}
+          <a
+            href="tel:7095330066"
+            aria-label="24/7 Emergency Helpline"
+            title="24/7 Emergency Helpline: 7095330066"
+            className="p-2 rounded-full bg-red-50 hover:bg-red-100 dark:bg-red-950/50 dark:hover:bg-red-900/60 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-900/60 transition-all active:scale-90 flex items-center justify-center shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-xl">call</span>
+          </a>
 
           {/* Notifications button */}
           <div className="relative">
@@ -206,9 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <span className="material-symbols-outlined text-2xl">notifications</span>
               {totalUnreadCount > 0 && (
-                <span className={`absolute top-1.5 right-1.5 w-3 h-3 rounded-full ring-2 ring-surface flex items-center justify-center text-[9px] font-bold text-white ${
-                  hasUpcoming24h ? 'bg-amber-500 animate-pulse' : 'bg-primary'
-                }`}>
+                <span className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full ring-2 ring-surface flex items-center justify-center text-[9px] font-bold text-white bg-primary">
                   {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
                 </span>
               )}
@@ -400,48 +370,68 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Nav Drawer */}
+      {/* Mobile Nav Drawer / Android Sheet */}
       {showMobileMenu && (
-        <div className="md:hidden bg-surface border-b border-outline-variant/30 px-6 py-4 space-y-3 animate-in slide-in-from-top duration-200">
-          {/* Mobile Language Switcher */}
-          <LanguageToggle variant="drawer" />
-
-          <button
-            onClick={() => { onNavigate('home'); setShowMobileMenu(false); }}
-            className={`block w-full text-left py-2 font-medium ${currentView === 'home' ? 'text-primary font-bold' : 'text-on-surface-variant'}`}
-          >
-            {t.navHome}
-          </button>
-          <button
-            onClick={() => { onNavigate('hospitals'); setShowMobileMenu(false); }}
-            className={`block w-full text-left py-2 font-medium ${currentView === 'hospitals' ? 'text-primary font-bold' : 'text-on-surface-variant'}`}
-          >
-            {t.navServices}
-          </button>
-          <button
-            onClick={() => { onNavigate('bookings'); setShowMobileMenu(false); }}
-            className={`flex items-center justify-between w-full text-left py-2 font-medium ${currentView === 'bookings' ? 'text-primary font-bold' : 'text-on-surface-variant'}`}
-          >
-            <span>{t.navBookings}</span>
-            {hasUpcoming24h && (
-              <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                {upcomingAlerts.length} within 24h
+        <div className="md:hidden bg-surface-container-lowest/98 backdrop-blur-xl border-b border-outline-variant/30 px-5 py-4 space-y-3.5 animate-in slide-in-from-top-3 duration-200 shadow-xl">
+          <div className="flex items-center justify-between pb-2 border-b border-surface-variant">
+            <div className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-full bg-teal-mist/50 text-primary flex items-center justify-center font-bold text-xs">
+                SS
               </span>
-            )}
-          </button>
-          <button
-            onClick={() => { onNavigate('profile'); setShowMobileMenu(false); }}
-            className={`block w-full text-left py-2 font-medium ${currentView === 'profile' ? 'text-primary font-bold' : 'text-on-surface-variant'}`}
+              <div>
+                <p className="text-xs font-bold text-on-surface leading-tight">
+                  {isTelugu ? 'శ్రీ సంకల్ప హాస్పిటల్స్' : 'Sri Sankalpa Hospitals'}
+                </p>
+                <p className="text-[10px] text-outline">
+                  {isTelugu ? 'కోదాడ, తెలంగాణ' : 'Kodad, Telangana'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowMobileMenu(false)}
+              className="p-1 rounded-full text-on-surface-variant hover:bg-surface-variant active:scale-95"
+              aria-label="Close menu"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+          </div>
+
+          {/* Quick Helpline banner inside drawer */}
+          <a
+            href="tel:7095330066"
+            className="flex items-center justify-between p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-red-700 dark:text-red-300 text-xs font-bold active:scale-98 transition-all"
           >
-            {t.navProfile}
-          </button>
-          <button
-            onClick={() => { onNavigate('support'); setShowMobileMenu(false); }}
-            className={`block w-full text-left py-2 font-medium ${currentView === 'support' ? 'text-primary font-bold' : 'text-on-surface-variant'}`}
-          >
-            {t.navSupport}
-          </button>
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-lg">emergency</span>
+              <span>{isTelugu ? '24/7 ఎమర్జెన్సీ: 7095330066' : '24/7 Emergency: 7095330066'}</span>
+            </div>
+            <span className="text-[11px] underline">{isTelugu ? 'కాల్ చేయండి' : 'Call'}</span>
+          </a>
+
+          <div className="space-y-1">
+            <button
+              onClick={() => { onNavigate('support'); setShowMobileMenu(false); }}
+              className="w-full text-left px-3 py-2.5 rounded-xl font-medium text-xs text-on-surface hover:bg-surface-container flex items-center justify-between transition-colors"
+            >
+              <span className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-lg text-primary">help</span>
+                <span>{t.navSupport}</span>
+              </span>
+              <span className="material-symbols-outlined text-sm text-outline">chevron_right</span>
+            </button>
+
+            <button
+              onClick={() => { onNavigate('playstore'); setShowMobileMenu(false); }}
+              className="w-full text-left px-3 py-2.5 rounded-xl font-bold text-xs bg-teal-mist/30 text-primary flex items-center justify-between transition-colors border border-primary/20"
+            >
+              <span className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-lg text-primary">shop</span>
+                <span>Google Play Store Assets</span>
+              </span>
+              <span className="text-[10px] bg-primary text-white px-2 py-0.5 rounded-full font-bold">512×512</span>
+            </button>
+          </div>
+
           <div className="pt-2 border-t border-surface-variant flex gap-2">
             {isLoggedIn ? (
               <button
@@ -449,22 +439,22 @@ export const Header: React.FC<HeaderProps> = ({
                   setShowMobileMenu(false);
                   onLogout();
                 }}
-                className="w-full py-2.5 text-center text-xs font-semibold rounded-lg bg-error/10 text-error flex items-center justify-center gap-2"
+                className="w-full py-2.5 text-center text-xs font-semibold rounded-xl bg-error/10 text-error flex items-center justify-center gap-2 active:scale-95 transition-all"
               >
                 <span className="material-symbols-outlined text-base">logout</span>
-                {t.navLogOut} ({user.name})
+                <span>{t.navLogOut} ({user.name})</span>
               </button>
             ) : (
               <>
                 <button
                   onClick={() => { onNavigate('login'); setShowMobileMenu(false); }}
-                  className="flex-1 py-2 text-center text-xs font-semibold rounded-lg bg-sand-soft text-primary"
+                  className="flex-1 py-2.5 text-center text-xs font-semibold rounded-xl bg-sand-soft text-primary active:scale-95 transition-all"
                 >
                   {t.navLogIn}
                 </button>
                 <button
                   onClick={() => { onNavigate('signup'); setShowMobileMenu(false); }}
-                  className="flex-1 py-2 text-center text-xs font-semibold rounded-lg bg-primary text-on-primary"
+                  className="flex-1 py-2.5 text-center text-xs font-semibold rounded-xl bg-primary text-on-primary active:scale-95 transition-all shadow-xs"
                 >
                   {t.navSignUp}
                 </button>
