@@ -31,7 +31,6 @@ import { LoginView } from './components/LoginView';
 import { SignUpView } from './components/SignUpView';
 import { SupportView } from './components/SupportView';
 import { BookingsView } from './components/BookingsView';
-import { PlayStoreStudioView } from './components/PlayStoreStudioView';
 import { FilterModal } from './components/FilterModal';
 import { AIAssistantModal } from './components/AIAssistantModal';
 import { ToastContainer, AppToast } from './components/ToastContainer';
@@ -460,10 +459,6 @@ export default function App() {
             onNavigateToHospitals={() => setCurrentView('hospitals')}
             onShowToast={handleShowToast}
           />
-        )}
-
-        {currentView === 'playstore' && (
-          <PlayStoreStudioView onBack={() => setCurrentView('home')} />
         )}
       </main>
 

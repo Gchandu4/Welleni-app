@@ -6,8 +6,7 @@ export type ViewMode =
   | 'login' 
   | 'signup' 
   | 'support' 
-  | 'bookings'
-  | 'playstore';
+  | 'bookings';
 
 export interface Doctor {
   id: string;

@@ -3,6 +3,7 @@ import { UserProfile, MedicalRecord, Booking, Patient, MedicationReminder } from
 import { MedicationRemindersSection } from './MedicationRemindersSection';
 import { exportBookingToIcs } from '../utils/calendarExport';
 import { useLanguage } from '../i18n/LanguageContext';
+import { AdvancedSettingsModal } from './AdvancedSettingsModal';
 
 interface ProfileRecordsViewProps {
   user: UserProfile;
@@ -66,6 +67,8 @@ export const ProfileRecordsView: React.FC<ProfileRecordsViewProps> = ({
 
   // Logout confirmation modal state
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  // Advanced settings modal state
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
   const handleSimulatedFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -184,16 +187,29 @@ export const ProfileRecordsView: React.FC<ProfileRecordsViewProps> = ({
               </div>
             </div>
 
-            {/* Logout button */}
-            {isLoggedIn && (
+            <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
+              {/* Advanced Settings Button */}
               <button
-                onClick={() => setShowLogoutConfirm(true)}
-                className="px-4 py-2 bg-error/10 hover:bg-error/20 text-error font-semibold text-xs rounded-xl flex items-center gap-1.5 transition-colors self-start sm:self-center shrink-0"
+                onClick={() => setShowAdvancedSettings(true)}
+                type="button"
+                className="px-3 py-2 bg-surface-container hover:bg-surface-variant text-on-surface font-semibold text-xs rounded-xl flex items-center gap-1.5 transition-colors border border-outline-variant/30 active:scale-95"
+                title={isTelugu ? 'అధునాతన సెట్టింగ్‌లు (భాష & థీమ్)' : 'Advanced Settings (Language & Theme)'}
               >
-                <span className="material-symbols-outlined text-base">logout</span>
-                {t.logoutBtn}
+                <span className="material-symbols-outlined text-base text-primary">settings</span>
+                <span>{isTelugu ? 'అధునాతన సెట్టింగ్‌లు' : 'Advanced Settings'}</span>
               </button>
-            )}
+
+              {/* Logout button */}
+              {isLoggedIn && (
+                <button
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="px-4 py-2 bg-error/10 hover:bg-error/20 text-error font-semibold text-xs rounded-xl flex items-center gap-1.5 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-base">logout</span>
+                  {t.logoutBtn}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -709,6 +725,12 @@ export const ProfileRecordsView: React.FC<ProfileRecordsViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* Advanced Settings Modal */}
+      <AdvancedSettingsModal
+        isOpen={showAdvancedSettings}
+        onClose={() => setShowAdvancedSettings(false)}
+      />
     </div>
   );
 };

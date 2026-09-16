@@ -3,6 +3,7 @@ import { ViewMode, UserProfile } from '../types';
 import { UpcomingAppointmentAlert } from '../utils/appointmentAlerts';
 import { useLanguage } from '../i18n/LanguageContext';
 import { WelleniLogo } from './WelleniLogo';
+import { AdvancedSettingsModal } from './AdvancedSettingsModal';
 
 interface HeaderProps {
   currentView: ViewMode;
@@ -27,6 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
   const hasUpcoming24h = upcomingAlerts.length > 0;
 
@@ -142,33 +144,10 @@ export const Header: React.FC<HeaderProps> = ({
           >
             {t.navSupport}
           </button>
-
-          <button
-            onClick={() => onNavigate('playstore')}
-            className={`font-semibold text-xs transition-all px-3 py-1.5 rounded-full flex items-center gap-1.5 border shadow-2xs ${
-              currentView === 'playstore'
-                ? 'bg-primary text-on-primary border-primary'
-                : 'bg-teal-mist/30 hover:bg-teal-mist/60 text-primary border-primary/20'
-            }`}
-            title="Google Play Store Listing Assets & Images"
-          >
-            <span className="material-symbols-outlined text-sm">shop</span>
-            <span>Play Store Assets</span>
-          </button>
         </nav>
 
-        {/* Right Actions: Helpline, Notifications & Profile */}
-        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3.5 relative">
-          {/* Direct 24/7 Emergency Call Quick Action */}
-          <a
-            href="tel:7095330066"
-            aria-label="24/7 Emergency Helpline"
-            title="24/7 Emergency Helpline: 7095330066"
-            className="p-2 rounded-full bg-red-50 hover:bg-red-100 dark:bg-red-950/50 dark:hover:bg-red-900/60 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-900/60 transition-all active:scale-90 flex items-center justify-center shadow-2xs"
-          >
-            <span className="material-symbols-outlined text-xl">call</span>
-          </a>
-
+        {/* Right Actions: Notifications & Profile */}
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 relative">
           {/* Notifications button */}
           <div className="relative">
             <button
@@ -336,6 +315,26 @@ export const Header: React.FC<HeaderProps> = ({
                     {t.navSupport}
                   </button>
 
+                  <a
+                    href="tel:7095330066"
+                    onClick={() => setShowUserDropdown(false)}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg flex items-center gap-2 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-base text-red-600 dark:text-red-400">call</span>
+                    <span>{isTelugu ? '24/7 ఎమర్జెన్సీ హెల్ప్‌లైన్' : '24/7 Emergency Helpline'}</span>
+                  </a>
+
+                  <button
+                    onClick={() => {
+                      setShowUserDropdown(false);
+                      setShowAdvancedSettings(true);
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-on-surface hover:bg-surface-container rounded-lg flex items-center gap-2 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-base text-primary">settings</span>
+                    {isTelugu ? 'అధునాతన సెట్టింగ్‌లు' : 'Advanced Settings'}
+                  </button>
+
                   <div className="my-1 border-t border-surface-variant"></div>
 
                   <button
@@ -408,6 +407,22 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-[11px] underline">{isTelugu ? 'కాల్ చేయండి' : 'Call'}</span>
           </a>
 
+          {/* Advanced Settings in Drawer */}
+          <button
+            onClick={() => {
+              setShowMobileMenu(false);
+              setShowAdvancedSettings(true);
+            }}
+            type="button"
+            className="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container/60 border border-outline-variant/30 text-xs font-bold text-on-surface active:scale-98 transition-all hover:bg-surface-container"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-lg text-primary">settings</span>
+              <span>{isTelugu ? 'అధునాతన సెట్టింగ్‌లు (భాష & థీమ్)' : 'Advanced Settings (Language & Theme)'}</span>
+            </div>
+            <span className="material-symbols-outlined text-sm text-outline">chevron_right</span>
+          </button>
+
           <div className="space-y-1">
             <button
               onClick={() => { onNavigate('support'); setShowMobileMenu(false); }}
@@ -418,17 +433,6 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>{t.navSupport}</span>
               </span>
               <span className="material-symbols-outlined text-sm text-outline">chevron_right</span>
-            </button>
-
-            <button
-              onClick={() => { onNavigate('playstore'); setShowMobileMenu(false); }}
-              className="w-full text-left px-3 py-2.5 rounded-xl font-bold text-xs bg-teal-mist/30 text-primary flex items-center justify-between transition-colors border border-primary/20"
-            >
-              <span className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-lg text-primary">shop</span>
-                <span>Google Play Store Assets</span>
-              </span>
-              <span className="text-[10px] bg-primary text-white px-2 py-0.5 rounded-full font-bold">512×512</span>
             </button>
           </div>
 
@@ -463,6 +467,12 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
       )}
+
+      {/* Advanced Settings Modal (Language Selection & Theme Mode) */}
+      <AdvancedSettingsModal
+        isOpen={showAdvancedSettings}
+        onClose={() => setShowAdvancedSettings(false)}
+      />
     </header>
   );
 };
